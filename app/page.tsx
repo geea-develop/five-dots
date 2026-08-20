@@ -126,7 +126,7 @@ export default function FiveDots() {
             setLitDots(finalLit);
             setCompleted(true);
             vibrate([100, 50, 100, 50, 200]); // celebration vibration
-            playDiscoBeat(6);
+            playDiscoBeat(12);
           }
         }
       }
@@ -141,7 +141,7 @@ export default function FiveDots() {
         .then((data) => setQuote({ text: data.quote, author: data.author }))
         .catch(() => setQuote({ text: "You're amazing!", author: "5 Dots" }));
 
-      const timer = setTimeout(() => reset(), 6000);
+      const timer = setTimeout(() => reset(), 12000);
       return () => clearTimeout(timer);
     }
   }, [completed]);
