@@ -183,12 +183,12 @@ export default function FiveDots() {
 
           if (isNext) {
             className +=
-              "bg-gray-600 border-yellow-400 hover:bg-gray-500 cursor-pointer hover:scale-110 shadow-[0_0_12px_rgba(250,204,21,0.4)] animate-pulse";
+              "bg-yellow-400 border-white border-4 cursor-pointer scale-125 shadow-[0_0_25px_rgba(250,204,21,0.8)] animate-pulse";
           } else if (isLit) {
             className +=
-              "bg-yellow-400 border-yellow-300 shadow-[0_0_20px_rgba(250,204,21,0.7)] scale-110";
+              "bg-yellow-600 border-yellow-700 shadow-[0_0_10px_rgba(250,204,21,0.3)]";
           } else {
-            className += "bg-gray-800 border-gray-600 opacity-50";
+            className += "bg-gray-800 border-gray-600 opacity-40";
           }
 
           if (completed) {
