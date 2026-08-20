@@ -222,7 +222,7 @@ export default function FiveDots() {
       {/* Attribution */}
       <div className="absolute bottom-4 flex flex-col items-center gap-2 z-10">
         <img
-          src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgeea-develop.github.io%2Ffive-dots&count_bg=%23555555&title_bg=%23111827&icon=&icon_color=%23E7E7E7&title=visitors&edge_flat=true"
+          src="https://hitscounter.dev/api/hit?url=https%3A%2F%2Fgeea-develop.github.io%2Ffive-dots&label=visitors&icon=eye&color=%23555"
           alt="visitor count"
           className="h-5"
         />
