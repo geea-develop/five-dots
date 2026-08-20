@@ -7,8 +7,6 @@ export default function FiveDots() {
   const [direction, setDirection] = useState<"forward" | "backward">("forward");
   const [completed, setCompleted] = useState(false);
   const [litDots, setLitDots] = useState<Set<number>>(new Set());
-  const [showButton, setShowButton] = useState(false);
-
   const handleDotClick = useCallback(
     (dotIndex: number) => {
       if (completed) return;
@@ -47,7 +45,7 @@ export default function FiveDots() {
 
   useEffect(() => {
     if (completed) {
-      const timer = setTimeout(() => setShowButton(true), 4000);
+      const timer = setTimeout(() => reset(), 4000);
       return () => clearTimeout(timer);
     }
   }, [completed]);
@@ -57,7 +55,6 @@ export default function FiveDots() {
     setDirection("forward");
     setCompleted(false);
     setLitDots(new Set());
-    setShowButton(false);
   };
 
   const nextExpected =
@@ -113,16 +110,6 @@ export default function FiveDots() {
 
       {/* Disco celebration */}
       {completed && <Disco />}
-
-      {/* Play Again - appears after delay */}
-      {showButton && (
-        <button
-          onClick={reset}
-          className="mt-12 px-6 py-2 bg-white text-gray-900 font-semibold rounded-lg hover:bg-gray-200 transition-all animate-fade-in z-10"
-        >
-          Play Again
-        </button>
-      )}
     </div>
   );
 }
