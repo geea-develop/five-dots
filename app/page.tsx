@@ -61,7 +61,7 @@ export default function FiveDots() {
     direction === "forward" ? activeDot + 1 : activeDot - 1;
 
   return (
-    <div className={`min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden transition-colors duration-500 ${completed ? "bg-black" : "bg-gray-900"}`}>
+    <div className={`h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden transition-colors duration-500 ${completed ? "bg-black" : "bg-gray-900"}`}>
       <h1 className="text-2xl sm:text-3xl font-bold text-white mb-4 z-10">5 Dots</h1>
 
       <p className="text-sm sm:text-base text-gray-400 mb-8 sm:mb-12 text-center z-10">
