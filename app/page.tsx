@@ -73,13 +73,13 @@ export default function FiveDots() {
       </p>
 
       {/* Dots */}
-      <div className="flex gap-4 sm:gap-10 items-center z-10">
+      <div className="flex gap-3 sm:gap-10 items-center z-10">
         {[1, 2, 3, 4, 5].map((dot) => {
           const isLit = litDots.has(dot);
           const isNext = !completed && dot === nextExpected;
 
           let className =
-            "w-12 h-12 sm:w-16 sm:h-16 rounded-full transition-all duration-300 border-2 ";
+            "w-10 h-10 sm:w-16 sm:h-16 rounded-full transition-all duration-300 border-2 ";
 
           if (isNext) {
             className +=
@@ -92,7 +92,7 @@ export default function FiveDots() {
           }
 
           if (completed) {
-            className = "w-12 h-12 sm:w-16 sm:h-16 rounded-full border-2 border-white animate-disco-dot";
+            className = "w-10 h-10 sm:w-16 sm:h-16 rounded-full border-2 border-white animate-disco-dot";
             className += ` disco-dot-${dot}`;
           }
 
