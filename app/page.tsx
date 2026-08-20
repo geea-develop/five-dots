@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 
 export default function FiveDots() {
-  const [activeDot, setActiveDot] = useState(0); // next dot to click (1-indexed, 0 = not started)
+  const [activeDot, setActiveDot] = useState(0);
   const [direction, setDirection] = useState<"forward" | "backward">("forward");
   const [completed, setCompleted] = useState(false);
   const [litDots, setLitDots] = useState<Set<number>>(new Set());
@@ -13,7 +13,8 @@ export default function FiveDots() {
       if (completed) return;
 
       if (direction === "forward") {
-        if (dotIndex === activeDot + 1) {
+        const expected = activeDot + 1;
+        if (dotIndex === expected) {
           const newLit = new Set(litDots);
           newLit.add(dotIndex);
           setLitDots(newLit);
@@ -28,11 +29,15 @@ export default function FiveDots() {
         const expected = activeDot - 1;
         if (dotIndex === expected) {
           const newLit = new Set(litDots);
-          newLit.delete(dotIndex + 1); // unlight the previous one
+          newLit.delete(activeDot); // unlight the one we're leaving
           setLitDots(newLit);
           setActiveDot(expected);
 
-          if (expected === 0) {
+          if (expected === 1) {
+            // Last dot clicked — unlight it too and complete
+            const finalLit = new Set(newLit);
+            finalLit.delete(expected);
+            setLitDots(finalLit);
             setCompleted(true);
           }
         }
@@ -47,6 +52,10 @@ export default function FiveDots() {
     setCompleted(false);
     setLitDots(new Set());
   };
+
+  // Determine the next expected dot
+  const nextExpected =
+    direction === "forward" ? activeDot + 1 : activeDot - 1;
 
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center p-4 relative overflow-hidden">
@@ -64,23 +73,30 @@ export default function FiveDots() {
       <div className="flex gap-10 items-center">
         {[1, 2, 3, 4, 5].map((dot) => {
           const isLit = litDots.has(dot);
-          const isNext =
-            direction === "forward"
-              ? dot === activeDot + 1
-              : dot === activeDot - 1;
+          const isNext = !completed && dot === nextExpected;
+
+          let className =
+            "w-16 h-16 rounded-full transition-all duration-300 border-2 ";
+
+          if (isNext) {
+            // The next dot to click — always looks clickable
+            className +=
+              "bg-gray-600 border-yellow-400 hover:bg-gray-500 cursor-pointer hover:scale-110 shadow-[0_0_12px_rgba(250,204,21,0.4)]";
+          } else if (isLit) {
+            // Lit up (already clicked going forward)
+            className +=
+              "bg-yellow-400 border-yellow-300 shadow-[0_0_20px_rgba(250,204,21,0.7)] scale-110";
+          } else {
+            // Inactive
+            className += "bg-gray-800 border-gray-600 opacity-50";
+          }
 
           return (
             <button
               key={dot}
               onClick={() => handleDotClick(dot)}
               disabled={completed}
-              className={`w-16 h-16 rounded-full transition-all duration-300 border-2 ${
-                isLit
-                  ? "bg-yellow-400 border-yellow-300 shadow-[0_0_20px_rgba(250,204,21,0.7)] scale-110"
-                  : isNext
-                  ? "bg-gray-700 border-gray-400 hover:bg-gray-600 cursor-pointer hover:scale-105"
-                  : "bg-gray-800 border-gray-600 opacity-50"
-              }`}
+              className={className}
               aria-label={`Dot ${dot}`}
             />
           );
