@@ -1,6 +1,81 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+
+// Generate a click sound using Web Audio API
+function playClickSound(pitch: number = 1) {
+  try {
+    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(400 * pitch, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(600 * pitch, ctx.currentTime + 0.1);
+    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.15);
+    setTimeout(() => ctx.close(), 200);
+  } catch {}
+}
+
+// Disco beat using Web Audio API
+function playDiscoBeat(duration: number = 6) {
+  try {
+    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const bpm = 120;
+    const beatInterval = 60 / bpm;
+    const totalBeats = Math.floor(duration / beatInterval);
+
+    for (let i = 0; i < totalBeats; i++) {
+      const time = ctx.currentTime + i * beatInterval;
+      
+      // Kick drum
+      const kickOsc = ctx.createOscillator();
+      const kickGain = ctx.createGain();
+      kickOsc.connect(kickGain);
+      kickGain.connect(ctx.destination);
+      kickOsc.type = "sine";
+      kickOsc.frequency.setValueAtTime(150, time);
+      kickOsc.frequency.exponentialRampToValueAtTime(40, time + 0.1);
+      kickGain.gain.setValueAtTime(0.4, time);
+      kickGain.gain.exponentialRampToValueAtTime(0.01, time + 0.15);
+      kickOsc.start(time);
+      kickOsc.stop(time + 0.15);
+
+      // Hi-hat on off-beats
+      if (i % 2 === 1) {
+        const noise = ctx.createBufferSource();
+        const noiseBuffer = ctx.createBuffer(1, ctx.sampleRate * 0.05, ctx.sampleRate);
+        const data = noiseBuffer.getChannelData(0);
+        for (let j = 0; j < data.length; j++) data[j] = Math.random() * 2 - 1;
+        noise.buffer = noiseBuffer;
+        const hihatGain = ctx.createGain();
+        const hihatFilter = ctx.createBiquadFilter();
+        hihatFilter.type = "highpass";
+        hihatFilter.frequency.value = 8000;
+        noise.connect(hihatFilter);
+        hihatFilter.connect(hihatGain);
+        hihatGain.connect(ctx.destination);
+        hihatGain.gain.setValueAtTime(0.15, time);
+        hihatGain.gain.exponentialRampToValueAtTime(0.01, time + 0.05);
+        noise.start(time);
+        noise.stop(time + 0.05);
+      }
+    }
+
+    setTimeout(() => ctx.close(), (duration + 0.5) * 1000);
+  } catch {}
+}
+
+// Haptic feedback
+function vibrate(pattern: number | number[] = 30) {
+  if (typeof navigator !== "undefined" && navigator.vibrate) {
+    navigator.vibrate(pattern);
+  }
+}
 
 export default function FiveDots() {
   const [activeDot, setActiveDot] = useState(0);
@@ -8,6 +83,8 @@ export default function FiveDots() {
   const [completed, setCompleted] = useState(false);
   const [litDots, setLitDots] = useState<Set<number>>(new Set());
   const [quote, setQuote] = useState<{ text: string; author: string } | null>(null);
+  const [directionFlash, setDirectionFlash] = useState(false);
+
   const handleDotClick = useCallback(
     (dotIndex: number) => {
       if (completed) return;
@@ -20,8 +97,15 @@ export default function FiveDots() {
           setLitDots(newLit);
           setActiveDot(dotIndex);
 
+          // Sound: ascending pitch
+          playClickSound(0.8 + dotIndex * 0.15);
+          vibrate(30);
+
           if (dotIndex === 5) {
             setDirection("backward");
+            setDirectionFlash(true);
+            vibrate([50, 30, 50]); // double buzz for direction change
+            setTimeout(() => setDirectionFlash(false), 600);
           }
         }
       } else {
@@ -32,11 +116,17 @@ export default function FiveDots() {
           setLitDots(newLit);
           setActiveDot(expected);
 
+          // Sound: descending pitch
+          playClickSound(0.8 + expected * 0.15);
+          vibrate(30);
+
           if (expected === 1) {
             const finalLit = new Set(newLit);
             finalLit.delete(expected);
             setLitDots(finalLit);
             setCompleted(true);
+            vibrate([100, 50, 100, 50, 200]); // celebration vibration
+            playDiscoBeat(6);
           }
         }
       }
@@ -46,7 +136,6 @@ export default function FiveDots() {
 
   useEffect(() => {
     if (completed) {
-      // Fetch a random quote
       fetch("https://dummyjson.com/quotes/random")
         .then((res) => res.json())
         .then((data) => setQuote({ text: data.quote, author: data.author }))
@@ -63,6 +152,7 @@ export default function FiveDots() {
     setCompleted(false);
     setLitDots(new Set());
     setQuote(null);
+    setDirectionFlash(false);
   };
 
   const nextExpected =
@@ -72,7 +162,9 @@ export default function FiveDots() {
     <div className={`h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden transition-colors duration-500 ${completed ? "bg-black" : "bg-gray-900"}`}>
       <h1 className="text-2xl sm:text-3xl font-bold text-white mb-4 z-10">5 Dots</h1>
 
-      <p className="text-sm sm:text-base text-gray-400 mb-8 sm:mb-12 text-center z-10">
+      <p className={`text-sm sm:text-base mb-8 sm:mb-12 text-center z-10 transition-all duration-300 ${
+        directionFlash ? "text-yellow-400 scale-110 font-bold" : "text-gray-400"
+      }`}>
         {completed
           ? "🪩 You did it!"
           : direction === "forward"
