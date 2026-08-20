@@ -1,8 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="64" fill="#111827"/>
-  <circle cx="96" cy="256" r="28" fill="#facc15"/>
-  <circle cx="200" cy="256" r="28" fill="#facc15"/>
-  <circle cx="304" cy="256" r="28" fill="#facc15"/>
-  <circle cx="408" cy="256" r="28" fill="#facc15"/>
-  <circle cx="256" cy="256" r="28" fill="#facc15" opacity="0.5"/>
+  <rect width="512" height="512" rx="96" fill="#111827"/>
+  <!-- 5 dots in a row, well inset -->
+  <circle cx="136" cy="256" r="32" fill="#facc15"/>
+  <circle cx="196" cy="256" r="32" fill="#facc15"/>
+  <circle cx="256" cy="256" r="32" fill="#facc15"/>
+  <circle cx="316" cy="256" r="32" fill="#facc15"/>
+  <circle cx="376" cy="256" r="32" fill="#facc15"/>
 </svg>
