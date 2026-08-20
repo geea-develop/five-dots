@@ -126,6 +126,16 @@ export default function FiveDots() {
           <p className="text-gray-400 mt-2 text-sm">— {quote.author}</p>
         </div>
       )}
+
+      {/* Attribution */}
+      <a
+        href="https://dummyjson.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="absolute bottom-4 text-gray-600 text-xs hover:text-gray-400 transition-colors z-10"
+      >
+        Quotes by DummyJSON
+      </a>
     </div>
   );
 }
