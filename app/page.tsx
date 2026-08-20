@@ -183,7 +183,7 @@ export default function FiveDots() {
 
           if (isNext) {
             className +=
-              "bg-gray-600 border-yellow-400 hover:bg-gray-500 cursor-pointer hover:scale-110 shadow-[0_0_12px_rgba(250,204,21,0.4)]";
+              "bg-gray-600 border-yellow-400 hover:bg-gray-500 cursor-pointer hover:scale-110 shadow-[0_0_12px_rgba(250,204,21,0.4)] animate-pulse";
           } else if (isLit) {
             className +=
               "bg-yellow-400 border-yellow-300 shadow-[0_0_20px_rgba(250,204,21,0.7)] scale-110";
@@ -201,9 +201,15 @@ export default function FiveDots() {
               key={dot}
               onClick={() => handleDotClick(dot)}
               disabled={completed}
-              className={className}
+              className={`${className} relative`}
               aria-label={`Dot ${dot}`}
-            />
+            >
+              {isNext && !completed && (
+                <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-yellow-400 text-lg animate-bounce">
+                  👆
+                </span>
+              )}
+            </button>
           );
         })}
       </div>
