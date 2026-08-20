@@ -234,8 +234,8 @@ export default function FiveDots() {
         >
           Quotes by DummyJSON
         </a>
-        <span className="text-gray-700 text-[10px] font-mono">
-          v{process.env.NEXT_PUBLIC_BUILD_ID?.slice(0, 7) || "dev"}
+        <span className="text-gray-700 text-[10px]">
+          build {process.env.NEXT_PUBLIC_BUILD_ID?.slice(0, 7) || "local"} 🎯
         </span>
       </div>
     </div>
