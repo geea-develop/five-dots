@@ -7,6 +7,7 @@ export default function FiveDots() {
   const [direction, setDirection] = useState<"forward" | "backward">("forward");
   const [completed, setCompleted] = useState(false);
   const [litDots, setLitDots] = useState<Set<number>>(new Set());
+  const [quote, setQuote] = useState<{ text: string; author: string } | null>(null);
   const handleDotClick = useCallback(
     (dotIndex: number) => {
       if (completed) return;
@@ -45,7 +46,13 @@ export default function FiveDots() {
 
   useEffect(() => {
     if (completed) {
-      const timer = setTimeout(() => reset(), 4000);
+      // Fetch a random quote
+      fetch("https://dummyjson.com/quotes/random")
+        .then((res) => res.json())
+        .then((data) => setQuote({ text: data.quote, author: data.author }))
+        .catch(() => setQuote({ text: "You're amazing!", author: "5 Dots" }));
+
+      const timer = setTimeout(() => reset(), 6000);
       return () => clearTimeout(timer);
     }
   }, [completed]);
@@ -55,6 +62,7 @@ export default function FiveDots() {
     setDirection("forward");
     setCompleted(false);
     setLitDots(new Set());
+    setQuote(null);
   };
 
   const nextExpected =
@@ -110,6 +118,14 @@ export default function FiveDots() {
 
       {/* Disco celebration */}
       {completed && <Disco />}
+
+      {/* Quote */}
+      {completed && quote && (
+        <div className="mt-8 max-w-sm text-center z-10 animate-fade-in">
+          <p className="text-white text-lg italic">&ldquo;{quote.text}&rdquo;</p>
+          <p className="text-gray-400 mt-2 text-sm">— {quote.author}</p>
+        </div>
+      )}
     </div>
   );
 }
