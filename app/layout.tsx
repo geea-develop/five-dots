@@ -25,11 +25,6 @@ export default function RootLayout({
       </head>
       <body>
         {children}
-        <script
-          data-goatcounter="https://five-dots.goatcounter.com/count"
-          async
-          src="//gc.zgo.at/count.js"
-        />
       </body>
     </html>
   );

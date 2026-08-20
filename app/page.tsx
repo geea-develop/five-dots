@@ -220,14 +220,21 @@ export default function FiveDots() {
       )}
 
       {/* Attribution */}
-      <a
-        href="https://dummyjson.com"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="absolute bottom-4 text-gray-600 text-xs hover:text-gray-400 transition-colors z-10"
-      >
-        Quotes by DummyJSON
-      </a>
+      <div className="absolute bottom-4 flex flex-col items-center gap-2 z-10">
+        <img
+          src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgeea-develop.github.io%2Ffive-dots&count_bg=%23555555&title_bg=%23111827&icon=&icon_color=%23E7E7E7&title=visitors&edge_flat=true"
+          alt="visitor count"
+          className="h-5"
+        />
+        <a
+          href="https://dummyjson.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-gray-600 text-xs hover:text-gray-400 transition-colors"
+        >
+          Quotes by DummyJSON
+        </a>
+      </div>
     </div>
   );
 }
